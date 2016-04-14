@@ -1,3 +1,3 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+fd_offer:
+    resource: "@FDOfferBundle/Resources/config/routing.yml"
+    prefix:   /

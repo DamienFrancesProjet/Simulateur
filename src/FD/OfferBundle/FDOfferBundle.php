@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle;
+namespace FD\OfferBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+class FDOfferBundle extends Bundle
 {
 }
