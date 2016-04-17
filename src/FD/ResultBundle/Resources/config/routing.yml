@@ -1,3 +1,4 @@
-fd_result_homepage:
-    path:     /
-    defaults: { _controller: FDResultBundle:Default:index }
+fd_result_get:
+    path:    /Result/Get
+    defaults:
+        _controller:    FDResultBundle:Result:get
