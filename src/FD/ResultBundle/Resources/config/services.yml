@@ -1,0 +1,4 @@
+services:
+#    fd_result.example:
+#        class: FD\ResultBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

@@ -1,3 +1,7 @@
+fd_result:
+    resource: "@FDResultBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fd_offer:
     resource: "@FDOfferBundle/Resources/config/routing.yml"
     prefix:   /

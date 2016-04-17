@@ -1,0 +1,3 @@
+fd_result_homepage:
+    path:     /
+    defaults: { _controller: FDResultBundle:Default:index }
