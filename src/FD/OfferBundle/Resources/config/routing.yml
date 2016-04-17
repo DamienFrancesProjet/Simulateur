@@ -1,4 +1,4 @@
 fd_offer_get:
-    path:    /Offer/Get
+    path:    /Offer/Get1N2
     defaults:
-        _controller:    FDOfferBundle:Offer:get
+        _controller:    FDOfferBundle:Offer:get1N2

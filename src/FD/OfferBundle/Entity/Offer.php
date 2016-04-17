@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Offer
  *
- * @ORM\Table(name="offer")
+ * @ORM\Table(name="off_offer")
  * @ORM\Entity(repositoryClass="FD\OfferBundle\Repository\OfferRepository")
  */
 class Offer
@@ -15,7 +15,7 @@ class Offer
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="OFF_ID", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -24,56 +24,69 @@ class Offer
     /**
      * @var int
      *
-     * @ORM\Column(name="eventId", type="integer")
+     * @ORM\Column(name="OFF_EVENT_ID", type="integer")
      */
     private $eventId;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="sportId", type="integer")
+     * @ORM\Column(name="OFF_SPORT_ID", type="integer")
      */
     private $sportId;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="FDJNumber", type="integer")
+     * @ORM\Column(name="OFF_FDJ_NUMBER", type="integer")
      */
     private $fDJNumber;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="marketType", type="string", length=255)
+     * @ORM\Column(name="OFF_MARKET_TYPE", type="string", length=255)
      */
     private $marketType;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="date")
+     * @ORM\Column(name="OFF_DATE", type="date")
      */
     private $date;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="offerName", type="string", length=255)
+     * @ORM\Column(name="OFF_LABEL", type="string", length=255)
      */
-    private $offerName;
+    private $label;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="competitionId", type="integer")
+     * @ORM\Column(name="OFF_COMPETITION_ID", type="integer")
      */
     private $competitionId;
 
+    /**
+     * @return string
+     */
+    public function getLabel($label)
+    {
+        return $this->label;
+    }
 
     /**
-     * Get id
-     *
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -82,22 +95,14 @@ class Offer
     }
 
     /**
-     * Set eventId
-     *
-     * @param integer $eventId
-     *
-     * @return Offer
+     * @param int $id
      */
-    public function setEventId($eventId)
+    public function setId($id)
     {
-        $this->eventId = $eventId;
-
-        return $this;
+        $this->id = $id;
     }
 
     /**
-     * Get eventId
-     *
      * @return int
      */
     public function getEventId()
@@ -106,22 +111,14 @@ class Offer
     }
 
     /**
-     * Set sportId
-     *
-     * @param integer $sportId
-     *
-     * @return Offer
+     * @param int $eventId
      */
-    public function setSportId($sportId)
+    public function setEventId($eventId)
     {
-        $this->sportId = $sportId;
-
-        return $this;
+        $this->eventId = $eventId;
     }
 
     /**
-     * Get sportId
-     *
      * @return int
      */
     public function getSportId()
@@ -130,22 +127,14 @@ class Offer
     }
 
     /**
-     * Set fDJNumber
-     *
-     * @param integer $fDJNumber
-     *
-     * @return Offer
+     * @param int $sportId
      */
-    public function setFDJNumber($fDJNumber)
+    public function setSportId($sportId)
     {
-        $this->fDJNumber = $fDJNumber;
-
-        return $this;
+        $this->sportId = $sportId;
     }
 
     /**
-     * Get fDJNumber
-     *
      * @return int
      */
     public function getFDJNumber()
@@ -154,22 +143,14 @@ class Offer
     }
 
     /**
-     * Set marketType
-     *
-     * @param string $marketType
-     *
-     * @return Offer
+     * @param int $fDJNumber
      */
-    public function setMarketType($marketType)
+    public function setFDJNumber($fDJNumber)
     {
-        $this->marketType = $marketType;
-
-        return $this;
+        $this->fDJNumber = $fDJNumber;
     }
 
     /**
-     * Get marketType
-     *
      * @return string
      */
     public function getMarketType()
@@ -178,22 +159,30 @@ class Offer
     }
 
     /**
-     * Set date
-     *
-     * @param \DateTime $date
-     *
-     * @return Offer
+     * @param string $marketType
      */
-    public function setDate($date)
+    public function setMarketType($marketType)
     {
-        $this->date = $date;
-
-        return $this;
+        $this->marketType = $marketType;
     }
 
     /**
-     * Get date
-     *
+     * @return int
+     */
+    public function getCompetitionId()
+    {
+        return $this->competitionId;
+    }
+
+    /**
+     * @param int $competitionId
+     */
+    public function setCompetitionId($competitionId)
+    {
+        $this->competitionId = $competitionId;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getDate()
@@ -202,51 +191,11 @@ class Offer
     }
 
     /**
-     * Set offerName
-     *
-     * @param string $offerName
-     *
-     * @return Offer
+     * @param \DateTime $date
      */
-    public function setOfferName($offerName)
+    public function setDate($date)
     {
-        $this->offerName = $offerName;
-
-        return $this;
-    }
-
-    /**
-     * Get offerName
-     *
-     * @return string
-     */
-    public function getOfferName()
-    {
-        return $this->offerName;
-    }
-
-    /**
-     * Set competitionId
-     *
-     * @param integer $competitionId
-     *
-     * @return Offer
-     */
-    public function setCompetitionId($competitionId)
-    {
-        $this->competitionId = $competitionId;
-
-        return $this;
-    }
-
-    /**
-     * Get competitionId
-     *
-     * @return int
-     */
-    public function getCompetitionId()
-    {
-        return $this->competitionId;
+        $this->date = $date;
     }
 }
 
