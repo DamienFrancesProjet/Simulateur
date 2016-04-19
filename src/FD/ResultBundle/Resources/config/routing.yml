@@ -1,4 +1,4 @@
 fd_result_get:
-    path:    /Result/Get
+    path:    /Result/Get1N2
     defaults:
-        _controller:    FDResultBundle:Result:get
+        _controller:    FDResultBundle:Result:get1N2

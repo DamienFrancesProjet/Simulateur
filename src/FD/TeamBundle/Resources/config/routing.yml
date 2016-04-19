@@ -1,0 +1,4 @@
+fd_team_get:
+    path:    /Team/Get
+    defaults:
+        _controller:    FDTeamBundle:Team:get

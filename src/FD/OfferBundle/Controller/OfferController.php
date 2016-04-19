@@ -18,7 +18,6 @@ class OfferController extends Controller
 {
     public function get1N2Action()
     {
-        ini_set('max_execution_time', 18000);
         $offerInformationsArray = array();
         $apiContentFootball = file_get_contents('https://www.parionssport.fr/api/1n2/offre?sport=100');
         $offerFootballInformations = json_decode($apiContentFootball);
@@ -79,124 +78,6 @@ class OfferController extends Controller
             }
         }
 
-
-        //var_dump($offerInformationsArray[0][0]->outcomes);
-
-        //var_dump($offerInformationsArray[0][0]->formules);
-
-        //var_dump($offerInformationsArray[0][0]->formules[0]->outcomes);
-
         return new Response("Hello World");
     }
 }
-
-/*$repositoryOffer = $this->getDoctrine()->getManager()->getRepository('BSOfferBundle:Offer');
-$repositoryOutcome = $this->getDoctrine()->getManager()->getRepository('BSOfferBundle:Outcome');
-
-foreach($offerInformationsArray as $offerInformations)
-{
-    if($offerInformations != null) // Vérification qu'il y a bien des offres sur le sport que l'on va traiter
-    {
-        foreach ($offerInformations as $offer)
-        {
-            $localOffer = new Offer();
-            $localOffer->setEventId($offer->eventId);
-            $localOffer->setMarketId($offer->marketId);
-            $localOffer->setSportId($offer->sportId);
-            $localOffer->setIndexOffer($offer->index);
-            $localOffer->setMarketType($offer->marketType);
-            $localOffer->setEnd($offer->end);
-            $localOffer->setLabelOffer($offer->label);
-            $localOffer->setCompetition($offer->competition);
-            $localOffer->setCompetitionId($offer->competitionId);
-            foreach ($offer->outcomes as $outcomes) {
-                $localOutcome = new Outcome();
-                $localOutcome->setOffer($localOffer);
-                if($outcomes->label == "1")
-                {
-                    $localOutcomeLabel = "Domicile";
-                    $localOutcome->setLabelOutcome("$localOutcomeLabel");
-                }
-                elseif($outcomes->label == "2")
-                {
-                    $localOutcomeLabel = "Exterieur";
-
-                    $localOutcome->setLabelOutcome($localOutcomeLabel);
-                }
-                else {
-                    $localOutcomeLabel = $outcomes->label;
-                    $localOutcome->setLabelOutcome($localOutcomeLabel);
-                }
-                $localOutcome->setCote($outcomes->cote);
-                $localOutcome->setEventId($offer->eventId);
-                $localOutcome->setIndexOffer($offer->index);
-                $duplicateOutcome = $repositoryOutcome->verifyDuplicate($localOutcomeLabel, $offer);
-                if(empty($duplicateOutcome))
-                {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($localOutcome);
-                    $em->flush();
-                }
-            }
-            foreach ($offer->formules as $formule) {
-                $localOfferFormule = new Offer();
-                $localOfferFormule->setEventId($formule->eventId);
-                $localOfferFormule->setMarketId($offer->marketId);
-                $localOfferFormule->setSportId($formule->sportId);
-                $localOfferFormule->setIndexOffer($formule->index);
-                $localOfferFormule->setMarketType($formule->marketType);
-                $localOfferFormule->setEnd($formule->end);
-                $localOfferFormule->setLabelOffer($formule->label);
-                $localOfferFormule->setCompetition($formule->competition);
-                $localOfferFormule->setCompetitionId($offer->competitionId);
-                foreach ($formule->outcomes as $outcomes) {
-                    $localOutcome = new Outcome();
-                    $localOutcome->setOffer($localOfferFormule);
-                    if($outcomes->label == "1")
-                    {
-                        $localOutcomeLabel = "Domicile";
-                        $localOutcome->setLabelOutcome("$localOutcomeLabel");
-                    }
-                    elseif($outcomes->label == "2")
-                    {
-                        $localOutcomeLabel = "Exterieur";
-
-                        $localOutcome->setLabelOutcome($localOutcomeLabel);
-                    }
-                    else {
-                        $localOutcomeLabel = $outcomes->label;
-                        $localOutcome->setLabelOutcome($localOutcomeLabel);
-                    }
-                    $localOutcome->setCote($outcomes->cote);
-                    $localOutcome->setEventId($formule->eventId);
-                    $localOutcome->setIndexOffer($formule->index);
-                    $duplicateOutcome = $repositoryOutcome->verifyDuplicate($localOutcomeLabel, $formule);
-                    if(empty($duplicateOutcome))
-                    {
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($localOutcome);
-                        $em->flush();
-                    }
-                }
-
-                $duplicateFormule = $repositoryOffer->verifyDuplicate($formule);
-                if(empty($duplicateFormule)) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($localOfferFormule);
-                    $em->flush();
-                }
-            }
-            $duplicateOffer = $repositoryOffer->verifyDuplicate($offer);
-            if(empty($duplicateOffer)) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($localOffer);
-                $em->flush();
-            }
-        }
-    }
-}
-
-
-return new Response("Hello World");
-}*/
-
