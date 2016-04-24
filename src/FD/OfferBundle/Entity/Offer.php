@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Offer
  *
- * @ORM\Table(name="off_offer")
+ * @ORM\Table(name="off_offer", indexes={
+ *  @ORM\Index(name="index_offer_eventId", columns={"OFF_EVENT_ID"}),
+ *  @ORM\Index(name="index_offer_id", columns={"OFF_ID"})
+ * })
  * @ORM\Entity(repositoryClass="FD\OfferBundle\Repository\OfferRepository")
  */
 class Offer

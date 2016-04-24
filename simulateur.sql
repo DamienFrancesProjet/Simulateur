@@ -48,6 +48,7 @@ CREATE TABLE tea_team(
 
 CREATE INDEX index_offer_id ON off_offer (OFF_ID);
 CREATE INDEX index_offer_eventId ON off_offer (OFF_EVENT_ID);
+
 CREATE INDEX index_outcome_id ON out_outcome (OUT_ID);
 CREATE INDEX index_outcome_offer ON out_outcome (OUT_OFF_OFFER_ID);
 CREATE INDEX index_result_id ON res_result (RES_ID);
@@ -57,4 +58,6 @@ CREATE INDEX index_result_label ON res_result (RES_LABEL);
 CREATE INDEX index_market_result_id ON mar_market_result (MAR_ID);
 CREATE INDEX index_market_result_result ON mar_market_result (MAR_RES_RESULT_ID);
 CREATE INDEX index_team_id ON tea_team (TEA_ID);
+CREATE INDEX index_team_label ON tea_team (TEA_LABEL);
+CREATE INDEX index_team_competition_id ON tea_team (TEA_COMPETITION_ID);
 

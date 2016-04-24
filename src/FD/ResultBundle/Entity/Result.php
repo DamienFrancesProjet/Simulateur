@@ -13,7 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Result
  *
- * @ORM\Table(name="res_result")
+ * @ORM\Table(name="res_result", indexes={
+ *  @ORM\Index(name="index_result_id", columns={"RES_ID"}),
+ *  @ORM\Index(name="index_result_event_id", columns={"RES_EVENT_ID"}),
+ *  @ORM\Index(name="index_result_competition_id", columns={"RES_COMPETITION_ID"}),
+ *  @ORM\Index(name="index_result_label", columns={"RES_LABEL"})
+ * })
  * @ORM\Entity(repositoryClass="FD\ResultBundle\Repository\ResultRepository")
  *
  */

@@ -13,7 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Team
  *
- * @ORM\Table(name="tea_team")
+ * @ORM\Table(name="tea_team", indexes={
+ *  @ORM\Index(name="index_team_id", columns={"TEA_ID"}),
+ *  @ORM\Index(name="index_team_label", columns={"TEA_LABEL"}),
+ *  @ORM\Index(name="index_team_competition_id", columns={"TEA_COMPETITION_ID"})
+ * })
  * @ORM\Entity(repositoryClass="FD\TeamBundle\Repository\TeamRepository")
  *
  */

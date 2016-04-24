@@ -15,7 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Outcome
  *
- * @ORM\Table(name="out_outcome")
+ * @ORM\Table(name="out_outcome", indexes={
+ *  @ORM\Index(name="index_outcome_id", columns={"OUT_ID"}),
+ *  @ORM\Index(name="index_outcome_offer", columns={"OUT_OFF_OFFER_ID"})
+ * })
  * @ORM\Entity(repositoryClass="FD\OfferBundle\Repository\OutcomeRepository")
  */
 class Outcome

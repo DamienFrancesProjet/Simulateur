@@ -24,14 +24,13 @@ class ResultController extends Controller
         ini_set('max_execution_time', 600);
 
         $dateStart = new DateTime();
-        $dateStart->setDate(2015,04,18);
+        $dateStart->setDate(2016,3,18);
 
         $dateEnd = new DateTime();
-        $dateEnd->setDate(2016,04,18);
+        $dateEnd->setDate(2016,4,22);
 
 
         $em = $this->getDoctrine()->getManager('default');
-        $offerRepository = $em->getRepository('FDResultBundle:Result');
 
         while($dateStart < $dateEnd)
         {
@@ -40,16 +39,12 @@ class ResultController extends Controller
 
             foreach($resultInformation as $resultItem)
             {
-                //$resultQuery = $offerRepository->findBy(array('eventId' => $resultItem->eventId));
-                //if(empty($resultQuery)) {
                     $result = new Result();
                     $result->setLabel($resultItem->label);
                     $result->setEventId($resultItem->eventId);
 
                     $result->setDate(\DateTime::createFromFormat('d/m/Y', substr($resultItem->end, 0, 10)));
                     $result->setCompetitionId($resultItem->competitionID);
-
-                    $em->persist($result);
 
                     if($resultItem->marketRes[0]->marketType == '1/N/2');
                     {
@@ -70,16 +65,17 @@ class ResultController extends Controller
                         }
                         $marketResult->setMarketType('1/N/2');
 
+                        $em->persist($result);
                         $em->persist($marketResult);
 
                     }
-                //}
             }
+
+            $em->flush();
+
             $dateStart->modify('+1 day');
             var_dump($dateStart->format('Y-m-d'));
         }
-
-        $em->flush();
 
         return new Response("Hello World");
     }

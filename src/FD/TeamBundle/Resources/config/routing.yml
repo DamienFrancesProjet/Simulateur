@@ -2,3 +2,8 @@ fd_team_get:
     path:    /Team/Get
     defaults:
         _controller:    FDTeamBundle:Team:get
+
+fd_team_result:
+    path:    /Team/Result
+    defaults:
+        _controller:    FDTeamBundle:Team:result
