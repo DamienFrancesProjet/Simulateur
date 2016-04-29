@@ -1,0 +1,4 @@
+fd_main:
+    path:    /Main
+    defaults:
+        _controller:    FDMainBundle:Main:main

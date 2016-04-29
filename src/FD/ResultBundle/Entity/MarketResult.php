@@ -17,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="mar_market_result", indexes={
  *  @ORM\Index(name="index_market_result_result", columns={"MAR_ID"}),
- *  @ORM\Index(name="index_market_result_id", columns={"MAR_RES_RESULT_ID"})
+ *  @ORM\Index(name="index_market_result_id", columns={"MAR_RES_RESULT_ID"}),
+ *  @ORM\Index(name="index_market_result_resultat", columns={"MAR_RESULTAT"})
  * })
  * @ORM\Entity(repositoryClass="FD\ResultBundle\Repository\MarketResultRepository")
  */

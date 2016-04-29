@@ -7,3 +7,8 @@ fd_team_result:
     path:    /Team/Result
     defaults:
         _controller:    FDTeamBundle:Team:result
+
+fd_team_rank:
+    path:    /Team/Rank
+    defaults:
+        _controller:    FDTeamBundle:Team:Rank

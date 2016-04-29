@@ -16,7 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="tea_team", indexes={
  *  @ORM\Index(name="index_team_id", columns={"TEA_ID"}),
  *  @ORM\Index(name="index_team_label", columns={"TEA_LABEL"}),
- *  @ORM\Index(name="index_team_competition_id", columns={"TEA_COMPETITION_ID"})
+ *  @ORM\Index(name="index_team_competition_id", columns={"TEA_COMPETITION_ID"}),
+ *  @ORM\Index(name="index_team_points", columns={"TEA_POINTS"}),
+ *  @ORM\Index(name="index_team_serie", columns={"TEA_SERIE"})
  * })
  * @ORM\Entity(repositoryClass="FD\TeamBundle\Repository\TeamRepository")
  *

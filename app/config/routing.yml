@@ -1,3 +1,11 @@
+fd_bet:
+    resource: "@FDBetBundle/Resources/config/routing.yml"
+    prefix:   /
+
+fd_main:
+    resource: "@FDMainBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fd_team:
     resource: "@FDTeamBundle/Resources/config/routing.yml"
     prefix:   /

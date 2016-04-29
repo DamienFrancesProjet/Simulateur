@@ -10,5 +10,23 @@ namespace FD\TeamBundle\Repository;
  */
 class TeamRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByHtId($id)
+    {
+        $query = $this->_em->createQuery('SELECT t FROM FDTeamBundle:Team t WHERE t.id >= :id');
+        $query->setParameter("id", $id);
+        return $query->getResult();
+    }
 
+    public function findAllCompetitionId()
+    {
+        $query = $this->_em->createQuery('SELECT DISTINCT t.competitionId FROM FDTeamBundle:Team t');
+        return $query->getResult();
+    }
+
+    public function getRanking($competitionId)
+    {
+        $query = $this->_em->createQuery('SELECT t FROM FDTeamBundle:Team t WHERE t.competitionId = :competitionId ORDER BY t.points DESC ');
+        $query->setParameter("competitionId", $competitionId);
+        return $query->getResult();
+    }
 }

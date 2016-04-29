@@ -2,3 +2,8 @@ fd_result_get:
     path:    /Result/Get1N2
     defaults:
         _controller:    FDResultBundle:Result:get1N2
+
+fd_result_remove:
+    path:    /Result/Remove1Y
+    defaults:
+        _controller:    FDResultBundle:Result:remove1Y

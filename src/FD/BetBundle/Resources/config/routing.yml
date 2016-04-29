@@ -1,0 +1,3 @@
+fd_bet_homepage:
+    path:     /
+    defaults: { _controller: FDBetBundle:Default:index }

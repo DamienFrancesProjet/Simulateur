@@ -5,6 +5,8 @@ imports:
     - { resource: "@FDOfferBundle/Resources/config/services.yml" }
     - { resource: "@FDResultBundle/Resources/config/services.yml" }
     - { resource: "@FDTeamBundle/Resources/config/services.yml" }
+    - { resource: "@FDMainBundle/Resources/config/services.yml" }
+    - { resource: "@FDBetBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -64,6 +66,8 @@ doctrine:
                     FDOfferBundle : ~
                     FDResultBundle : ~
                     FDTeamBundle : ~
+                    FDMainBundle : ~
+                    FDBetBundle : ~
 
 # Swiftmailer Configuration
 swiftmailer:

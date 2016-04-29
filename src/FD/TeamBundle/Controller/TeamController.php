@@ -18,29 +18,18 @@ class TeamController extends Controller
 {
     public function getAction()
     {
-        ini_set('memory_limit', '512M');
-        ini_set('max_execution_time', 18000);
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 6000);
 
-        $dateUp = new DateTime();
-        $dateUp->setDate(2016,4,1);
-
-        $dateDown = new DateTime();
-        $dateDown->setDate(2016,3,1);
-
-        $dateEnd = new DateTime();
-        $dateEnd->setDate(2016,4,22);
-
+        $cptPersist = 0;
         $em = $this->getDoctrine()->getManager('default');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
-        while($dateUp < $dateEnd) {
-
-            $marketResults = $marketResultRepository->findByBetweenDate($dateUp, $dateDown);
+            $marketResults = $marketResultRepository->findAll();
             $result = null;
             foreach ($marketResults as $marketResult) {
                 $result = $marketResult->getResult();
                 $label = $result->getLabel();
-                if (substr_count($label, '-') == 1) {
                     $competitionId = $result->getCompetitionId();
                     $labelSplit = explode('-', $label);
 
@@ -56,7 +45,7 @@ class TeamController extends Controller
                         $homeTeam->setRank(0);
                         $homeTeam->setSerie('');
                         $em->persist($homeTeam);
-
+                        $cptPersist++;
                     }
 
                     $resultQuery = $teamRepository->findBy(array('label' => $labelSplit[1], 'competitionId' => $competitionId));
@@ -68,27 +57,42 @@ class TeamController extends Controller
                         $awayTeam->setRank(0);
                         $awayTeam->setSerie('');
                         $em->persist($awayTeam);
+                        $cptPersist++;
                     }
-
+                if($cptPersist == 1000)
+                {
                     $em->flush();
+                    $cptPersist = 0;
                 }
+
             }
-            $dateUp->modify('+1 month');
-            $dateDown->modify('+1 month');
+        if($cptPersist > 0)
+        {
+            $em->flush();
         }
+
+        var_dump("Team Get OK");
+
         return new Response("Hello World");
     }
 
     public function resultAction()
     {
+        ini_set('max_execution_time', 6000);
+        ini_set('memory_limit', '2048M');
+
         $em = $this->getDoctrine()->getManager('default');
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
         $teams = $teamRepository->findAll();
 
+        $cptPersist = 0;
+
         foreach($teams as $team)
         {
+            $team->setPoints(0);
+            $team->setSerie('');
             $teamLabel = $team->getLabel();
             $marketResults = $marketResultRepository->findByLabelAndCompetitionId($teamLabel, $team->getCompetitionId());
             foreach($marketResults as $marketResult)
@@ -96,9 +100,9 @@ class TeamController extends Controller
                 $result = $marketResult->getResult();
                 $resultLabel = $result->getLabel();
                 $resultLabelSplit = explode('-', $resultLabel);
+                $resultat = $marketResult->getResultat();
                 if($resultLabelSplit[0] == $teamLabel)
                 {
-                    $resultat = $marketResult->getResultat();
                     switch($resultat)
                     {
                         case '1':
@@ -114,8 +118,79 @@ class TeamController extends Controller
                             break;
                     }
                 }
+                else
+                {
+                    switch($resultat)
+                    {
+                        case '1':
+                            $team->setSerie('D'.$team->getSerie());
+                            break;
+                        case 'N':
+                            $team->setPoints($team->getPoints() + 1);
+                            $team->setSerie('N'.$team->getSerie());
+                            break;
+                        case '2':
+                            $team->setPoints($team->getPoints() + 3);
+                            $team->setSerie('V'.$team->getSerie());
+                            break;
+                    }
+                }
+            }
+            $em->persist($team);
+            $cptPersist++;
+
+            if($cptPersist == 1000)
+            {
+                $em->flush();
+                $cptPersist = 0;
             }
         }
+
+        if($cptPersist > 0)
+        {
+            $em->flush();
+        }
+
+        var_dump("Team Result OK");
+
+        return new Response("Hello World");
+    }
+
+    public function rankAction()
+    {
+        ini_set('max_execution_time', 6000);
+        ini_set('memory_limit', '2048M');
+
+        $cptPersist = 0;
+        $em = $this->getDoctrine()->getManager('default');
+        $teamRepository = $em->getRepository('FDTeamBundle:Team');
+        $competitionIds = $teamRepository->findAllCompetitionId();
+        foreach($competitionIds as $competitionId)
+        {
+            $ranking = $teamRepository->getRanking($competitionId['competitionId']);
+            $i = 1;
+            foreach($ranking as $teamRank)
+            {
+                $team = $teamRepository->find($teamRank->getId());
+                $team->setRank($i);
+                $i++;
+                $em->persist($team);
+                $cptPersist++;
+
+                if($cptPersist == 1000)
+                {
+                    $em->flush();
+                    $cptPersist = 0;
+                }
+            }
+        }
+
+        if($cptPersist > 0)
+        {
+            $em->flush();
+        }
+
+        var_dump("Team Rank OK");
 
         return new Response("Hello World");
     }

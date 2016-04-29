@@ -18,6 +18,13 @@ class MarketResultRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
+    public function findByLtDate($date)
+    {
+        $query = $this->_em->createQuery('SELECT mr FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.date < :date');
+        $query->setParameter('date', $date);
+        return $query->getResult();
+    }
+
     public function findByLabelAndCompetitionId($label, $competitionId)
     {
         $query = $this->_em->createQuery('SELECT mr FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.label LIKE :label AND r.competitionId = :competitionId ORDER BY r.date ASC');

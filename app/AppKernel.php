@@ -18,6 +18,8 @@ class AppKernel extends Kernel
             new FD\OfferBundle\FDOfferBundle(),
             new FD\ResultBundle\FDResultBundle(),
             new FD\TeamBundle\FDTeamBundle(),
+            new FD\MainBundle\FDMainBundle(),
+            new FD\BetBundle\FDBetBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
