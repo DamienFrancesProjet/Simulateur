@@ -25,10 +25,17 @@ class MarketResultRepository extends \Doctrine\ORM\EntityRepository
         return $query->getResult();
     }
 
-    public function findByLabelAndCompetitionId($label, $competitionId)
+    public function findByLabelAndCompetitionIdAndDate($label, $competitionId, $date)
     {
-        $query = $this->_em->createQuery('SELECT mr FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.label LIKE :label AND r.competitionId = :competitionId ORDER BY r.date ASC');
-        $query->setParameters(array('label' => '%'.$label.'%', 'competitionId' => $competitionId));
+        $query = $this->_em->createQuery('SELECT mr FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.label LIKE :label AND r.competitionId = :competitionId AND r.date < :date ORDER BY r.date DESC');
+        $query->setParameters(array('label' => '%'.$label.'%', 'competitionId' => $competitionId, 'date' => $date));
+        return $query->getResult();
+    }
+
+    public function findByEventId($eventId)
+    {
+        $query = $this->_em->createQuery('SELECT mr FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.eventId = :eventId');
+        $query->setParameter('eventId', $eventId);
         return $query->getResult();
     }
 }

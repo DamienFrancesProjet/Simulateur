@@ -44,6 +44,14 @@ class Bet
     private $marketResult;
 
     /**
+     * @var strategy
+     *
+     * @ORM\ManyToOne(targetEntity="FD\BetBundle\Entity\Strategy")
+     * @ORM\JoinColumn(name="BET_STR_STRATEGY_ID", referencedColumnName="STR_ID")
+     */
+    private $strategy;
+
+    /**
      * @return int
      */
     public function getId()
@@ -89,5 +97,21 @@ class Bet
     public function setMarketResult($marketResult)
     {
         $this->marketResult = $marketResult;
+    }
+
+    /**
+     * @return strategy
+     */
+    public function getStrategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * @param strategy $strategy
+     */
+    public function setStrategy($strategy)
+    {
+        $this->strategy = $strategy;
     }
 }

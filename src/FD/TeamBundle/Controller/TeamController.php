@@ -21,54 +21,59 @@ class TeamController extends Controller
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', 6000);
 
-        $cptPersist = 0;
         $em = $this->getDoctrine()->getManager('default');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
-            $marketResults = $marketResultRepository->findAll();
+
+        $dateEnd = new DateTime();
+        $dateUp = new DateTime();
+        $dateDown = new DateTime();
+        $dateDown->modify('-1 month');
+
+        while($dateDown < $dateEnd) {
+
+            $marketResults = $marketResultRepository->findByBetweenDate($dateUp, $dateDown);
             $result = null;
             foreach ($marketResults as $marketResult) {
                 $result = $marketResult->getResult();
                 $label = $result->getLabel();
-                    $competitionId = $result->getCompetitionId();
-                    $labelSplit = explode('-', $label);
+                $competitionId = $result->getCompetitionId();
+                $labelSplit = explode('-', $label);
+                $homeTeam = null;
+                $awayTeam = null;
 
-                    $homeTeam = null;
-                    $awayTeam = null;
+                if (substr($labelSplit[0], -1) == ' ') {
+                    $labelSplit[0] = substr($labelSplit[0], 0, -1);
+                }
+                if (substr($labelSplit[1], -1) == ' ') {
+                    $labelSplit[1] = substr($labelSplit[1], 0, -1);
+                }
 
-                    $resultQuery = $teamRepository->findBy(array('label' => $labelSplit[0], 'competitionId' => $competitionId));
-                    if(empty($resultQuery)) {
-                        $homeTeam = new Team();
-                        $homeTeam->setCompetitionId($competitionId);
-                        $homeTeam->setLabel($labelSplit[0]);
-                        $homeTeam->setPoints(0);
-                        $homeTeam->setRank(0);
-                        $homeTeam->setSerie('');
-                        $em->persist($homeTeam);
-                        $cptPersist++;
-                    }
-
-                    $resultQuery = $teamRepository->findBy(array('label' => $labelSplit[1], 'competitionId' => $competitionId));
-                    if(empty($resultQuery)) {
-                        $awayTeam = new Team();
-                        $awayTeam->setCompetitionId($competitionId);
-                        $awayTeam->setLabel($labelSplit[1]);
-                        $awayTeam->setPoints(0);
-                        $awayTeam->setRank(0);
-                        $awayTeam->setSerie('');
-                        $em->persist($awayTeam);
-                        $cptPersist++;
-                    }
-                if($cptPersist == 1000)
-                {
+                $resultQuery = $teamRepository->findBy(array('label' => $labelSplit[0], 'competitionId' => $competitionId));
+                if (empty($resultQuery)) {
+                    $homeTeam = new Team();
+                    $homeTeam->setCompetitionId($competitionId);
+                    $homeTeam->setLabel($labelSplit[0]);
+                    $homeTeam->setPoints(0);
+                    $homeTeam->setSerie('');
+                    $em->persist($homeTeam);
                     $em->flush();
-                    $cptPersist = 0;
+                }
+                $resultQuery = $teamRepository->findBy(array('label' => $labelSplit[1], 'competitionId' => $competitionId));
+                if (empty($resultQuery)) {
+                    $awayTeam = new Team();
+                    $awayTeam->setCompetitionId($competitionId);
+                    $awayTeam->setLabel($labelSplit[1]);
+                    $awayTeam->setPoints(0);
+                    $awayTeam->setSerie('');
+                    $em->persist($awayTeam);
+                    $em->flush();
                 }
 
             }
-        if($cptPersist > 0)
-        {
-            $em->flush();
+
+            $dateDown->modify('+1 month');
+            $dateUp->modify('+1 month');
         }
 
         var_dump("Team Get OK");
@@ -76,87 +81,105 @@ class TeamController extends Controller
         return new Response("Hello World");
     }
 
-    public function resultAction()
+    public function resultAction($date, $homeTeamLabel, $awayTeamLabel, $competitionId)
     {
-        ini_set('max_execution_time', 6000);
         ini_set('memory_limit', '2048M');
 
         $em = $this->getDoctrine()->getManager('default');
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
-        $teams = $teamRepository->findAll();
-
-        $cptPersist = 0;
-
-        foreach($teams as $team)
+        if(substr($homeTeamLabel, -1)== ' ')
         {
-            $team->setPoints(0);
-            $team->setSerie('');
-            $teamLabel = $team->getLabel();
-            $marketResults = $marketResultRepository->findByLabelAndCompetitionId($teamLabel, $team->getCompetitionId());
-            foreach($marketResults as $marketResult)
+            $homeTeamLabel = substr($homeTeamLabel, 0, -1);
+        }
+        if(substr($awayTeamLabel, -1)== ' ')
+        {
+            $awayTeamLabel = substr($awayTeamLabel, 0, -1);
+        }
+
+        $homeTeam = $teamRepository->findBy(array('label' => $homeTeamLabel, 'competitionId' => $competitionId));
+        $awayTeam = $teamRepository->findBy(array('label' => $awayTeamLabel, 'competitionId' => $competitionId));
+        if(!empty($homeTeam) && !empty($awayTeam)) {
+            $teams = [$homeTeam, $awayTeam];
+
+            $nbHomeMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($homeTeam[0]->getLabel(), $homeTeam[0]->getCompetitionId(), $date);
+            $nbAwayMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($awayTeam[0]->getLabel(), $awayTeam[0]->getCompetitionId(), $date);
+            if(count($nbHomeMarketResult) > count($nbAwayMarketResult))
             {
-                $result = $marketResult->getResult();
-                $resultLabel = $result->getLabel();
-                $resultLabelSplit = explode('-', $resultLabel);
-                $resultat = $marketResult->getResultat();
-                if($resultLabelSplit[0] == $teamLabel)
-                {
-                    switch($resultat)
+                $nbMarketResult = count($nbAwayMarketResult);
+            }
+            else
+            {
+                $nbMarketResult = count($nbHomeMarketResult);
+            }
+
+            $cptPersist = 0;
+
+            foreach ($teams as $teamItem) {
+                $team = $teamItem[0];
+                $team->setPoints(0);
+                $team->setSerie('');
+                $teamLabel = $team->getLabel();
+                $marketResultsNoCut = $marketResultRepository->findByLabelAndCompetitionIdAndDate($teamLabel, $team->getCompetitionId(), $date);
+                $marketResults = array_slice($marketResultsNoCut, 0, $nbMarketResult);
+                foreach ($marketResults as $marketResult) {
+                    $result = $marketResult->getResult();
+                    $resultLabel = $result->getLabel();
+                    $resultLabelSplit = explode('-', $resultLabel);
+                    $resultat = $marketResult->getResultat();
+                    if(substr($resultLabelSplit[0], -1)== ' ')
                     {
-                        case '1':
-                            $team->setPoints($team->getPoints() + 3);
-                            $team->setSerie('V'.$team->getSerie());
-                            break;
-                        case 'N':
-                            $team->setPoints($team->getPoints() + 1);
-                            $team->setSerie('N'.$team->getSerie());
-                            break;
-                        case '2':
-                            $team->setSerie('D'.$team->getSerie());
-                            break;
+                        $resultLabelSplit[0] = substr($resultLabelSplit[0], 0, -1);
+                    }
+                    if ($resultLabelSplit[0] == $teamLabel) {
+                        switch ($resultat) {
+                            case '1':
+                                $team->setPoints($team->getPoints() + 3);
+                                $team->setSerie( $team->getSerie().'V');
+                                break;
+                            case 'N':
+                                $team->setPoints($team->getPoints() + 1);
+                                $team->setSerie($team->getSerie().'N');
+                                break;
+                            case '2':
+                                $team->setSerie($team->getSerie().'D');
+                                break;
+                        }
+                    } else {
+                        switch ($resultat) {
+                            case '1':
+                                $team->setSerie($team->getSerie().'D');
+                                break;
+                            case 'N':
+                                $team->setPoints($team->getPoints() + 1);
+                                $team->setSerie($team->getSerie().'N');
+                                break;
+                            case '2':
+                                $team->setPoints($team->getPoints() + 3);
+                                $team->setSerie($team->getSerie().'V');
+                                break;
+                        }
                     }
                 }
-                else
-                {
-                    switch($resultat)
-                    {
-                        case '1':
-                            $team->setSerie('D'.$team->getSerie());
-                            break;
-                        case 'N':
-                            $team->setPoints($team->getPoints() + 1);
-                            $team->setSerie('N'.$team->getSerie());
-                            break;
-                        case '2':
-                            $team->setPoints($team->getPoints() + 3);
-                            $team->setSerie('V'.$team->getSerie());
-                            break;
-                    }
+                $em->persist($team);
+                $cptPersist++;
+
+                if ($cptPersist == 1000) {
+                    $em->flush();
+                    $cptPersist = 0;
                 }
             }
-            $em->persist($team);
-            $cptPersist++;
 
-            if($cptPersist == 1000)
-            {
+            if ($cptPersist > 0) {
                 $em->flush();
-                $cptPersist = 0;
             }
         }
-
-        if($cptPersist > 0)
-        {
-            $em->flush();
-        }
-
-        var_dump("Team Result OK");
 
         return new Response("Hello World");
     }
 
-    public function rankAction()
+    /*public function rankAction()
     {
         ini_set('max_execution_time', 6000);
         ini_set('memory_limit', '2048M');
@@ -193,6 +216,6 @@ class TeamController extends Controller
         var_dump("Team Rank OK");
 
         return new Response("Hello World");
-    }
+    }*/
 
 }

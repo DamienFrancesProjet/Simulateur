@@ -56,13 +56,6 @@ class Team
     private $points;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="TEA_RANK", type="integer")
-     */
-    private $rank;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="TEA_SERIE", type="string", length=255)
@@ -131,22 +124,6 @@ class Team
     public function setPoints($points)
     {
         $this->points = $points;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRank()
-    {
-        return $this->rank;
-    }
-
-    /**
-     * @param int $rank
-     */
-    public function setRank($rank)
-    {
-        $this->rank = $rank;
     }
 
     /**

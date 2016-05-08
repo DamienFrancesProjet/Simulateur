@@ -8,7 +8,6 @@ use FD\ResultBundle\Entity\MarketResult;
 use FD\ResultBundle\Entity\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\Date;
 
 
 /**
@@ -65,7 +64,7 @@ class ResultController extends Controller
 
         $cptPersist = 0;
         $dateStart = new DateTime();
-        $dateStart->modify('-1 year');
+        $dateStart->modify('-1 month');
 
         $dateEnd = new DateTime();
 
@@ -86,7 +85,7 @@ class ResultController extends Controller
                             $result->setLabel($resultItem->label);
                             $result->setEventId($resultItem->eventId);
 
-                            $result->setDate(\DateTime::createFromFormat('d/m/Y', substr($resultItem->end, 0, 10)));
+                            $result->setDate(\DateTime::createFromFormat('Y-m-d', substr($resultItem->end, 0, 10)));
                             $result->setCompetitionId($resultItem->competitionID);
 
                             if ($resultItem->marketRes[0]->marketType == '1/N/2') ;
@@ -94,16 +93,21 @@ class ResultController extends Controller
                                 $marketResult = new MarketResult();
                                 $marketResult->setFDJNumber($resultItem->marketRes[0]->index);
                                 $marketResult->setResult($result);
-                                switch ($resultItem->marketRes[0]->resultat) {
-                                    case '1':
-                                        $marketResult->setResultat('1');
-                                        break;
-                                    case '2':
-                                        $marketResult->setResultat('N');
-                                        break;
-                                    case '3':
-                                        $marketResult->setResultat('2');
-                                        break;
+                                $array = json_decode(json_encode($resultItem->marketRes[0]->resultat), True);
+                                if($array[1]['winner'] == 1)
+                                {
+                                    $marketResult->setResultat('1');
+
+                                }
+                                elseif($array[3]['winner'] == 1)
+                                {
+                                    $marketResult->setResultat('2');
+
+                                }
+                                else
+                                {
+                                    $marketResult->setResultat('N');
+
                                 }
                                 $marketResult->setMarketType('1/N/2');
 

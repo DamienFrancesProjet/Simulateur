@@ -76,7 +76,7 @@ class Offer
     /**
      * @return string
      */
-    public function getLabel($label)
+    public function getLabel()
     {
         return $this->label;
     }
