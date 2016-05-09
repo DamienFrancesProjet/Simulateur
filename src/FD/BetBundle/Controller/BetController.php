@@ -16,6 +16,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BetController extends Controller
 {
+    public function betIndexAction()
+    {
+        return $this->render('FDBetBundle:Bet:index.html.twig');
+    }
+
+    public function strategyIndexAction()
+    {
+        return $this->render('FDBetBundle:Strategy:index.html.twig');
+    }
 
     public function updateBetAction()
     {
@@ -172,7 +181,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -324,7 +333,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -476,7 +485,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -628,7 +637,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -779,7 +788,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -929,7 +938,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1080,7 +1089,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1232,7 +1241,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1382,7 +1391,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1578,7 +1587,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1736,7 +1745,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1898,7 +1907,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2057,7 +2066,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2215,7 +2224,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2373,7 +2382,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2534,7 +2543,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2691,7 +2700,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -2847,7 +2856,7 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(2692);
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);

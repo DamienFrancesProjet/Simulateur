@@ -1,3 +1,8 @@
+fd_result_index:
+    path:    /Result/Index
+    defaults:
+       _controller:    FDResultBundle:Result:index
+
 fd_result_get:
     path:    /Result/Get1N2
     defaults:

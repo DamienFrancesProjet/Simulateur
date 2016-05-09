@@ -1,3 +1,13 @@
+fd_bet_index:
+    path:    /Bet/Index
+    defaults:
+        _controller:    FDBetBundle:Bet:betIndex
+
+fd_strategy_index:
+    path:    /Strategy/Index
+    defaults:
+        _controller:    FDBetBundle:Bet:strategyIndex
+
 fd_bet_strategyLastVictoryHigherRankHomeLastDefeatAway:
     path:    /Bet/StrategyLastVictoryHigherRankHomeLastDefeatAway
     defaults:

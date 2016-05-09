@@ -1,3 +1,8 @@
+fd_team_index:
+    path:    /Team/Index
+    defaults:
+       _controller:    FDTeamBundle:Team:index
+
 fd_team_get:
     path:    /Team/Get
     defaults:

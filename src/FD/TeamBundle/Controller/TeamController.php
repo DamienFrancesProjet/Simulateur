@@ -16,6 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TeamController extends Controller
 {
+    public function indexAction()
+    {
+        return $this->render('FDTeamBundle:Team:index.html.twig');
+    }
+
     public function getAction()
     {
         ini_set('memory_limit', '2048M');

@@ -16,6 +16,11 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 class OfferController extends Controller
 {
+    public function indexAction()
+    {
+        return $this->render('FDOfferBundle:Offer:index.html.twig');
+    }
+
     public function get1N2Action()
     {
         ini_set('memory_limit', '2048M');

@@ -18,6 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ResultController extends Controller
 {
+
+    public function indexAction()
+    {
+        return $this->render('FDResultBundle:Result:index.html.twig');
+    }
+
     public function remove1YAction()
     {
         ini_set('memory_limit', '2048M');
@@ -52,9 +58,7 @@ class ResultController extends Controller
             $em->flush();
         }
 
-        var_dump("Result Remove1Y OK");
-
-        return new Response("Hello World");
+        return $this->render('FDResultBundle:Result:remove1Y.html.twig');
     }
 
     public function get1N2Action()

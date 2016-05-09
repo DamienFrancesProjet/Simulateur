@@ -1,3 +1,8 @@
+fd_offer_index:
+    path:    /Offer/Index
+    defaults:
+       _controller:    FDOfferBundle:Offer:index
+
 fd_offer_get:
     path:    /Offer/Get1N2
     defaults:
