@@ -103,8 +103,7 @@ class OfferController extends Controller
             $em->flush();
         }
 
-        var_dump("Offer Get OK");
 
-        return new Response("Hello World");
+        return $this->render('FDOfferBundle:Offer:get1N2.html.twig');
     }
 }

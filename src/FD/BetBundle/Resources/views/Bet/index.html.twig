@@ -3,13 +3,65 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <h1>Gestion des paris</h1>
+            <div class="col-xs-4 page-header">
+                <h1>Gestion des paris</h1>
+            </div>
+        </div>
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-1">
                     <label>Mettre à jour les paris pris</label>
-                    <div><button class="btn btn-primary active">Mettre à jour</button></div>
+                    <div><a href="{{ path('fd_bet_update') }}" class="btn btn-primary active">Mettre à jour</a></div>
+                </div>
+                <div class="col-xs-5 col-xs-offset-1">
+                    <label>Calculer les résultats des différentes stratégies</label>
+                    <div><a href="{{ path('fd_strategy_calculating') }}" class="btn btn-primary active">Calculer</a></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-11 col-xs-offset-1">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Argent misé</th>
+                                <th>Argent gagné</th>
+                                <th>Retour sur investissement</th>
+                                <th>Action</th>
+                                <th>En attente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for strategy in strategies %}
+                                {% if (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent > 0.2%}
+                                   <tr style="background-color: rgba(186, 184, 0, 0.33)">
+                                {% else %}
+                                   <tr>
+                                {% endif %}
+                                <td>{{ strategy.id }}</td>
+                                <td>{{ strategy.label }}</td>
+                                {% if strategy.moneySpent > 100 %}
+                                    <td style="color: #93001c; font-weight: 900">{{ strategy.moneySpent }}</td>
+                                {% else %}
+                                    <td>{{ strategy.moneySpent }}</td>
+                                {% endif %}
+                                <td>{{ strategy.moneyEarned }}</td>
+                                {% if (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent > 0%}
+                                    <td style="color: #009331; font-weight: 600">{{(strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent}}</td>
+                                {% else %}
+                                    <td style="color:#93001c; font-weight: 600">{{(strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent}}</td>
+                                {% endif %}
+                                <td><a href="{{ path('fd_bet_'~strategy.label) }}" class="btn btn-primary active">Générer paris</a> </td>
+                                {% if strategy.waiting == false %}
+                                    <td><span class="glyphicon glyphicon-remove"></span> </td>
+                                {% else %}
+                                    <td><span class="glyphicon glyphicon-ok"></span> </td>
+                                {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
 {% endblock %}

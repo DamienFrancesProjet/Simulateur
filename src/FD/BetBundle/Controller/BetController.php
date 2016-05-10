@@ -18,12 +18,10 @@ class BetController extends Controller
 {
     public function betIndexAction()
     {
-        return $this->render('FDBetBundle:Bet:index.html.twig');
-    }
-
-    public function strategyIndexAction()
-    {
-        return $this->render('FDBetBundle:Strategy:index.html.twig');
+        $em = $this->getDoctrine()->getManager('default');
+        $strategyRepository = $em->getRepository('FDBetBundle:Strategy');
+        $strategies = $strategyRepository->findAll();
+        return $this->render('FDBetBundle:Bet:index.html.twig', array('strategies' => $strategies));
     }
 
     public function updateBetAction()
@@ -34,6 +32,8 @@ class BetController extends Controller
         $bets = $betRepostory->findBy(array('marketResult' => null));
         $resultRepository = $em->getRepository('FDResultBundle:Result');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
+        $strategyRepository = $em->getRepository('FDBetBundle:Strategy');
+
 
         foreach ($bets as $bet) {
             $outcome = $bet->getOutcome();
@@ -56,13 +56,16 @@ class BetController extends Controller
             }
         }
 
+
+
         if ($cptPersist > 0) {
             $em->flush();
         }
 
-        var_dump("Bet Update OK");
+        $strategies = $strategyRepository->findAll();
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
-        return new Response("Hello World");
+
     }
 
     public function strategyCalculatingAction()
@@ -72,6 +75,8 @@ class BetController extends Controller
         $betRepository = $em->getRepository('FDBetBundle:Bet');
         $outcomeRepository = $em->getRepository('FDOfferBundle:Outcome');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
+        $strategyRepository = $em->getRepository('FDBetBundle:Strategy');
+
         $cptPersist = 0;
         $strategies = $strategyReposiory->findAll();
         foreach ($strategies as $strategy) {
@@ -135,13 +140,22 @@ class BetController extends Controller
 
         }
 
+        $strategies = $strategyRepository->findAll();
+        foreach($strategies as $strategy)
+        {
+            $strategy->setWaiting(false);
+            $em->persist($strategy);
+            $cptPersist++;
+        }
+
         if ($cptPersist > 0) {
             $em->flush();
         }
 
-        var_dump("Strategy Calculating OK");
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
-        return new Response("Hello World");
+
+
     }
 
     public function addStrategyAction($label)
@@ -180,8 +194,12 @@ class BetController extends Controller
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHomeLastDefeatAway'));
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -278,7 +296,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHomeLastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -306,9 +323,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankHomeLastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -333,7 +355,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHomeLastDefeatAway'));
+
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -430,7 +457,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHomeLastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -458,9 +484,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankHomeLastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -485,8 +516,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHome2LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -582,7 +617,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHome2LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -610,9 +644,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankHome2LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -637,8 +676,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHome2LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -734,7 +777,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHome2LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -762,9 +804,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankHome2LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -788,8 +835,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHomeLastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -885,7 +936,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHomeLastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -913,9 +963,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankHomeLastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -938,8 +993,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHome2LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -1035,7 +1094,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHome2LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1063,9 +1121,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankHome2LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1089,8 +1152,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHome3LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -1186,7 +1253,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankHome3LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1214,9 +1280,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankHome3LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1241,8 +1312,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHome3LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -1338,7 +1413,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHome3LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1366,9 +1440,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankHome3LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1391,8 +1470,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHome3LastDefeatAway'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -1488,7 +1571,6 @@ class BetController extends Controller
                 }
             }
             $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-            $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankHome3LastDefeatAway'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1516,9 +1598,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankHome3LastDefeatAway OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1586,9 +1673,12 @@ class BetController extends Controller
         $teamRepository = $em->getRepository('FDTeamBundle:Team');
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAwayLastDefeatHome'));
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
 
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -1692,7 +1782,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAwayLastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1720,9 +1809,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankAwayLastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1745,7 +1839,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAwayLastDefeatHome'));
+
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
 
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
@@ -1850,7 +1949,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAwayLastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -1878,9 +1976,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankAwayLastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -1907,8 +2010,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAway2LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2012,7 +2119,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAway2LastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2040,9 +2146,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankAway2LastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2066,8 +2177,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAway2LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2171,7 +2286,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAway2LastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2199,9 +2313,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankAway2LastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2224,8 +2343,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankAwayLastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2329,7 +2452,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankAwayLastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2357,9 +2479,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankAwayLastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2382,8 +2509,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankAway2LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2487,7 +2618,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankAway2LastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2515,9 +2645,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankAway2LastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2543,8 +2678,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAway3LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2648,7 +2787,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => 'LastVictoryHigherRankAway3LastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2676,9 +2814,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet StategyLastVictoryHigherRankAway3LastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2700,8 +2843,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAway3LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2805,7 +2952,6 @@ class BetController extends Controller
             {
                 $outcome = $outcomes[2];
             }
-            $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankAway3LastDefeatHome'));
 
             $resultQuery = $betRepository->findBy(array('outcome' => $outcome, 'strategy' => $strategies[0]));
             if (empty($resultQuery)) {
@@ -2833,9 +2979,15 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy2LastVictoryHigherRankAway3LastDefeatHome OK");
 
-        return new Response("Hello World");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
+
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
@@ -2856,8 +3008,12 @@ class BetController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
 
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId(3100);
+        $strategies = $strategyRepository->findBy(array('label' => '3LastVictoryHigherRankAway3LastDefeatHome'));
 
+        $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
+        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+
+        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
         foreach ($offerIds as $offerId) {
             $offer = $offerRepository->find($offerId[1]);
             $date = $offer->getDate();
@@ -2989,9 +3145,14 @@ class BetController extends Controller
             }
         }
 
-        var_dump("Bet Stategy3LastVictoryHigherRankAway3LastDefeatHome OK");
+        $strategies[0]->setWaiting(true);
+        $em->persist($strategies[0]);
+        $em->flush();
 
-        return new Response("Hello World");
+        $strategies = $strategyRepository->findAll();
+
+
+        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 }

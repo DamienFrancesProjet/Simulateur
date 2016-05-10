@@ -81,9 +81,8 @@ class TeamController extends Controller
             $dateUp->modify('+1 month');
         }
 
-        var_dump("Team Get OK");
 
-        return new Response("Hello World");
+        return $this->render('FDTeamBundle:Team:get.html.twig');
     }
 
     public function resultAction($date, $homeTeamLabel, $awayTeamLabel, $competitionId)

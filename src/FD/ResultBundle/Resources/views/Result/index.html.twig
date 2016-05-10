@@ -10,8 +10,8 @@
                     <div><a href="{{ path('fd_result_remove') }}" class="btn btn-danger active">Supprimer</a></div>
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
-                    <label>Récupérer les derniers résultats 1/N/2</label>
-                    <div><a href="#" class="btn btn-primary active">Récupérer</a></div>
+                    <label>Récupérer les résultats de la veille de type 1/N/2</label>
+                    <div><a href="{{ path('fd_result_get') }}" class="btn btn-primary active">Récupérer</a></div>
                 </div>
             </div>
             {% block response %}

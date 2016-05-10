@@ -21,6 +21,8 @@ class ResultController extends Controller
 
     public function indexAction()
     {
+
+
         return $this->render('FDResultBundle:Result:index.html.twig');
     }
 
@@ -136,7 +138,7 @@ class ResultController extends Controller
         {
             $em->flush();
         }
-        var_dump("Result Get1N2 OK");
-        return new Response("Hello World");
+
+        return $this->render('FDResultBundle:Result:get1N2.html.twig');
     }
 }

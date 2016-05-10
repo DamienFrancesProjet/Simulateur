@@ -39,6 +39,13 @@ class Strategy
     private $moneySpent;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="STR_WAITING", type="boolean", nullable=true)
+     */
+    private $waiting;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="STR_MONEY_EARNED", type="float", nullable=true)
@@ -107,6 +114,22 @@ class Strategy
     public function setMoneyEarned($moneyEarned)
     {
         $this->moneyEarned = $moneyEarned;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWaiting()
+    {
+        return $this->waiting;
+    }
+
+    /**
+     * @param mixed $waiting
+     */
+    public function setWaiting($waiting)
+    {
+        $this->waiting = $waiting;
     }
 }
 

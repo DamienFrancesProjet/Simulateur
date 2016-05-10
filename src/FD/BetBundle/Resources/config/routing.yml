@@ -3,52 +3,53 @@ fd_bet_index:
     defaults:
         _controller:    FDBetBundle:Bet:betIndex
 
-fd_strategy_index:
-    path:    /Strategy/Index
-    defaults:
-        _controller:    FDBetBundle:Bet:strategyIndex
 
-fd_bet_strategyLastVictoryHigherRankHomeLastDefeatAway:
+
+
+
+
+
+fd_bet_LastVictoryHigherRankHomeLastDefeatAway:
     path:    /Bet/StrategyLastVictoryHigherRankHomeLastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankHomeLastDefeatAway
 
-fd_bet_strategy2LastVictoryHigherRankHomeLastDefeatAway:
+fd_bet_2LastVictoryHigherRankHomeLastDefeatAway:
     path:    /Bet/Strategy2LastVictoryHigherRankHomeLastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankHomeLastDefeatAway
 
-fd_bet_strategyLastVictoryHigherRankHome2LastDefeatAway:
+fd_bet_LastVictoryHigherRankHome2LastDefeatAway:
     path:    /Bet/StrategyLastVictoryHigherRankHome2LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankHome2LastDefeatAway
 
-fd_bet_strategy2LastVictoryHigherRankHome2LastDefeatAway:
+fd_bet_2LastVictoryHigherRankHome2LastDefeatAway:
     path:    /Bet/Strategy2LastVictoryHigherRankHome2LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankHome2LastDefeatAway
 
-fd_bet_strategy3LastVictoryHigherRankHomeLastDefeatAway:
+fd_bet_3LastVictoryHigherRankHomeLastDefeatAway:
     path:    /Bet/Strategy3LastVictoryHigherRankHomeLastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankHomeLastDefeatAway
 
-fd_bet_strategy3LastVictoryHigherRankHome2LastDefeatAway:
+fd_bet_3LastVictoryHigherRankHome2LastDefeatAway:
     path:    /Bet/Strategy3LastVictoryHigherRankHome2LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankHome2LastDefeatAway
 
-fd_bet_strategyLastVictoryHigherRankHome3LastDefeatAway:
+fd_bet_LastVictoryHigherRankHome3LastDefeatAway:
     path:    /Bet/StrategyLastVictoryHigherRankHome3LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankHome3LastDefeatAway
 
-fd_bet_strategy2LastVictoryHigherRankHome3LastDefeatAway:
+fd_bet_2LastVictoryHigherRankHome3LastDefeatAway:
     path:    /Bet/Strategy2LastVictoryHigherRankHome3LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankHome3LastDefeatAway
 
-fd_bet_strategy3LastVictoryHigherRankHome3LastDefeatAway:
+fd_bet_3LastVictoryHigherRankHome3LastDefeatAway:
     path:    /Bet/Strategy3LastVictoryHigherRankHome3LastDefeatAway
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankHome3LastDefeatAway
@@ -56,32 +57,32 @@ fd_bet_strategy3LastVictoryHigherRankHome3LastDefeatAway:
 
 
 
-fd_bet_strategyLastVictoryHigherRankAwayLastDefeatHome:
+fd_bet_LastVictoryHigherRankAwayLastDefeatHome:
     path:    /Bet/StrategyLastVictoryHigherRankAwayLastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankAwayLastDefeatHome
 
-fd_bet_strategy2LastVictoryHigherRankAwayLastDefeatHome:
+fd_bet_2LastVictoryHigherRankAwayLastDefeatHome:
     path:    /Bet/Strategy2LastVictoryHigherRankAwayLastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankAwayLastDefeatHome
 
-fd_bet_strategyLastVictoryHigherRankAway2LastDefeatHome:
+fd_bet_LastVictoryHigherRankAway2LastDefeatHome:
     path:    /Bet/StrategyLastVictoryHigherRankAway2LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankAway2LastDefeatHome
 
-fd_bet_strategy2LastVictoryHigherRankAway2LastDefeatHome:
+fd_bet_2LastVictoryHigherRankAway2LastDefeatHome:
     path:    /Bet/Strategy2LastVictoryHigherRankAway2LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankAway2LastDefeatHome
 
-fd_bet_strategy3LastVictoryHigherRankAwayLastDefeatHome:
+fd_bet_3LastVictoryHigherRankAwayLastDefeatHome:
     path:    /Bet/Strategy3LastVictoryHigherRankAwayLastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankAwayLastDefeatHome
 
-fd_bet_strategy3LastVictoryHigherRankAway2LastDefeatHome:
+fd_bet_3LastVictoryHigherRankAway2LastDefeatHome:
     path:    /Bet/Strategy3LastVictoryHigherRankAway2LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankAway2LastDefeatHome
@@ -92,17 +93,17 @@ fd_bet_strategy3LastVictoryHigherRankAway2LastDefeatHome:
 
 
 
-fd_bet_strategyLastVictoryHigherRankAway3LastDefeatHome:
+fd_bet_LastVictoryHigherRankAway3LastDefeatHome:
     path:    /Bet/StrategyLastVictoryHigherRankAway3LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategyLastVictoryHigherRankAway3LastDefeatHome
 
-fd_bet_strategy2LastVictoryHigherRankAway3LastDefeatHome:
+fd_bet_2LastVictoryHigherRankAway3LastDefeatHome:
     path:    /Bet/Strategy2LastVictoryHigherRankAway3LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy2LastVictoryHigherRankAway3LastDefeatHome
 
-fd_bet_strategy3LastVictoryHigherRankAway3LastDefeatHome:
+fd_bet_3LastVictoryHigherRankAway3LastDefeatHome:
     path:    /Bet/Strategy3LastVictoryHigherRankAway3LastDefeatHome
     defaults:
         _controller:    FDBetBundle:Bet:strategy3LastVictoryHigherRankAway3LastDefeatHome
