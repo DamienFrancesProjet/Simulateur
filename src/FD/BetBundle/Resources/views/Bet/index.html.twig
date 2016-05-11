@@ -34,14 +34,22 @@
                         <tbody>
                             {% for strategy in strategies %}
                                 {% if (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent > 0.2%}
-                                   <tr style="background-color: rgba(186, 184, 0, 0.33)">
+                                   <tr style="background-color: rgba(0, 147, 49, 0.15)">
+                                {% elseif (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent < -0.2%}
+                                    <tr style="background-color: rgba(147, 0, 28, 0.15)">
                                 {% else %}
-                                   <tr>
+                                    <tr>
                                 {% endif %}
                                 <td>{{ strategy.id }}</td>
                                 <td>{{ strategy.label }}</td>
-                                {% if strategy.moneySpent > 100 %}
+                                {% if strategy.moneySpent > 100 and (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent < 0 %}
                                     <td style="color: #93001c; font-weight: 900">{{ strategy.moneySpent }}</td>
+                                {% elseif strategy.moneySpent > 50 and (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent < -0.2%}
+                                    <td style="color: #93001c; font-weight: 900">{{ strategy.moneySpent }}</td>
+                                {% elseif strategy.moneySpent > 100 and (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent > 0%}
+                                    <td style="color: #009331; font-weight: 900">{{ strategy.moneySpent }}</td>
+                                {% elseif strategy.moneySpent > 50 and (strategy.moneyEarned - strategy.moneySpent)/strategy.moneySpent > 0.2%}
+                                    <td style="color: #009331; font-weight: 900">{{ strategy.moneySpent }}</td>
                                 {% else %}
                                     <td>{{ strategy.moneySpent }}</td>
                                 {% endif %}

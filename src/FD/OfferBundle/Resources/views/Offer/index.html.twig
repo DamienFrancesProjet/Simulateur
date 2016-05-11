@@ -10,6 +10,36 @@
                     <div><a href="{{ path('fd_offer_get') }}" class="btn btn-primary active">Récupérer</a></div>
                 </div>
             </div>
+            {% block response %}
+            {% endblock %}
+        </div>
+        <div class="row">
+            <div class="col-xs-11 col-xs-offset-1">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Numéro FDJ</th>
+                        <th>Sport ID</th>
+                        <th>Paris - Cote</th>
+                        <th>Résultat</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for offer in offers %}
+                            <tr>
+                                <td>{{ offer.id }}</td>
+                                <td>{{ offer.label }}</td>
+                                <td>{{ offer.fDJNumber }}</td>
+                                <td>{{ offer.sportId }}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

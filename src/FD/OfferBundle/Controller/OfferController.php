@@ -8,23 +8,38 @@
 
 namespace FD\OfferBundle\Controller;
 
+use DateTime;
 use FD\OfferBundle\Entity\Offer;
 use FD\OfferBundle\Entity\Outcome;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class OfferController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('FDOfferBundle:Offer:index.html.twig');
+        $em = $this->getDoctrine()->getManager('default');
+        $outcomeRepository = $em->getRepository('FDOfferBundle:Outcome');
+        $offerRepository = $em->getRepository('FDOfferBundle:Offer');
+
+        $offers = array();
+
+        $offerIds = $outcomeRepository->findOfferOfTheDayDistinct(substr((new DateTime())->format('Y-m-d'), 0, 10));
+
+        foreach($offerIds as $offerId)
+        {
+            array_push($offers, $offerRepository->find($offerId[1]));
+        }
+
+        return $this->render('FDOfferBundle:Offer:index.html.twig', array("offers" => $offers));
     }
 
     public function get1N2Action()
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', 6000);
+
+
 
         $cptPersist = 0;
 
