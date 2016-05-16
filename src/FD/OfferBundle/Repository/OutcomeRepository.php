@@ -37,4 +37,11 @@ class OutcomeRepository extends \Doctrine\ORM\EntityRepository
         $query->setParameter('date', '%'.$date.'%');
         return $query->getResult();
     }
+
+    public function findOfferIdByOutcomeId($id)
+    {
+        $query = $this->_em->createQuery('SELECT IDENTITY(ou.offer) FROM FDOfferBundle:Outcome ou WHERE ou.id = :id');
+        $query->setParameter('id', $id);
+        return $query->getResult();
+    }
 }

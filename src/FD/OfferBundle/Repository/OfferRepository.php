@@ -10,4 +10,34 @@ namespace FD\OfferBundle\Repository;
  */
 class OfferRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findEventIdOfTheDay($date)
+    {
+        $query = $this->_em->createQuery('SELECT DISTINCT o.eventId FROM FDOfferBundle:Offer o WHERE o.date LIKE :date');
+        $query->setParameter('date', '%'.$date.'%');
+        return $query->getResult();
+    }
+
+    public function findLabelByEventId($eventId)
+    {
+        $query = $this->_em->createQuery('SELECT o.label FROM FDOfferBundle:Offer o WHERE o.eventId = :eventId');
+        $query->setParameter('eventId', $eventId);
+        return $query->getResult();
+    }
+
+    public function findFdjNumberByEventId($eventId)
+    {
+        $query = $this->_em->createQuery('SELECT o.fDJNumber FROM FDOfferBundle:Offer o WHERE o.eventId = :eventId');
+        $query->setParameter('eventId', $eventId);
+        return $query->getResult();
+    }
+
+    public function findSportIdByEventId($eventId)
+    {
+        $query = $this->_em->createQuery('SELECT o.sportId FROM FDOfferBundle:Offer o WHERE o.eventId = :eventId');
+        $query->setParameter('eventId', $eventId);
+        return $query->getResult();
+    }
+
+
+
 }

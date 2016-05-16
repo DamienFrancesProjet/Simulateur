@@ -10,4 +10,5 @@ namespace FD\ResultBundle\Repository;
  */
 class ResultRepository extends \Doctrine\ORM\EntityRepository
 {
+
 }

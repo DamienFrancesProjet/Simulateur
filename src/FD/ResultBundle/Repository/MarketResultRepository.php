@@ -38,4 +38,11 @@ class MarketResultRepository extends \Doctrine\ORM\EntityRepository
         $query->setParameter('eventId', $eventId);
         return $query->getResult();
     }
+
+    public function findResultatByEventId($eventId)
+    {
+        $query = $this->_em->createQuery('SELECT mr.resultat FROM FDResultBundle:MarketResult mr JOIN mr.result r WHERE r.eventId = :eventId');
+        $query->setParameter('eventId', $eventId);
+        return $query->getResult();
+    }
 }
