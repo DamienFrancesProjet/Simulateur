@@ -30,3 +30,7 @@ table th{
 .glyphicon.glyphicon-remove{
     color:#93001c;
 }
+
+.row{
+    margin-bottom: 5%;
+}

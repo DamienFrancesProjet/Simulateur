@@ -42,7 +42,6 @@ class OfferController extends Controller
         $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
         $outcomeRepository = $em->getRepository('FDOfferBundle:Outcome');
         $date = new DateTime();
-        $date->modify('-1 day');
 
         $eventIds = $offerRepository->findEventIdOfTheDay(substr($date->format('Y-m-d'), 0, 10));
 
@@ -119,9 +118,8 @@ class OfferController extends Controller
 
 
         }
-        var_dump($offers);
 
-        return new Response("Hello World");
+        return $this->render('FDOfferBundle:Offer:index.html.twig', array('offers' => $offers));
     }
 
     public function get1N2Action()
@@ -208,18 +206,87 @@ class OfferController extends Controller
             $em->flush();
         }
 
+        $betRepository = $em->getRepository('FDBetBundle:Bet');
+        $marketResultRepository = $em->getRepository('FDResultBundle:MarketResult');
         $outcomeRepository = $em->getRepository('FDOfferBundle:Outcome');
+        $date = new DateTime();
+
+        $eventIds = $offerRepository->findEventIdOfTheDay(substr($date->format('Y-m-d'), 0, 10));
 
         $offers = array();
 
-        $offerIds = $outcomeRepository->findOfferOfTheDayDistinct(substr((new DateTime())->format('Y-m-d'), 0, 10));
 
-        foreach($offerIds as $offerId)
+        foreach($eventIds as $eventIdArray)
         {
-            array_push($offers, $offerRepository->find($offerId[1]));
+            $eventId = $eventIdArray['eventId'];
+            $offer = array();
+            $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
+            $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
+            $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
+
+
+            $bet = $betRepository->findBetAndOutcomeByEventId($eventId);
+            if(!empty($bet))
+            {
+                $outcome = $outcomeRepository->find($bet[0][1]);
+                $offerId = $outcomeRepository->findOfferIdByOutcomeId($bet[0][1]);
+                $outcomes = $outcomeRepository->findBy(array('offer' => $offerRepository->find($offerId[0][1])));
+                if(sizeof($outcomes) == 3)
+                {
+                    if($outcomes[0] == $outcome)
+                    {
+                        $offer['bet'] = '1';
+                        $offer['cote'] = $outcome->getCote();
+                    }
+                    elseif($outcomes[1] == $outcome)
+                    {
+                        $offer['bet'] = 'N';
+                        $offer['cote'] = $outcome->getCote();
+
+                    }
+                    else
+                    {
+                        $offer['bet'] = '2';
+                        $offer['cote'] = $outcome->getCote();
+
+                    }
+                }
+                else
+                {
+                    if($outcomes[0] == $outcome)
+                    {
+                        $offer['bet'] = '1';
+                        $offer['cote'] = $outcome->getCote();
+
+                    }
+                    else
+                    {
+                        $offer['bet'] = '2';
+                        $offer['cote'] = $outcome->getCote();
+                    }
+                }
+            }
+            else
+            {
+                $offer['bet'] = null;
+                $offer['cote'] = null;
+            }
+
+            $resultat = $marketResultRepository->findResultatByEventId($eventId);
+            if(!empty($resultat))
+            {
+                $offer['resultat'] = $resultat[0]['resultat'];
+            }
+            else
+            {
+                $offer['resultat'] = null;
+            }
+
+            array_push($offers, $offer);
+
+
         }
 
-
-        return $this->render('FDOfferBundle:Offer:get1N2.html.twig', array("offers" => $offers));
+        return $this->render('FDOfferBundle:Offer:index.html.twig', array('offers' => $offers));
     }
 }

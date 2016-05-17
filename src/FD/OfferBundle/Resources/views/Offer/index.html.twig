@@ -18,23 +18,29 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nom</th>
                         <th>Numéro FDJ</th>
                         <th>Sport ID</th>
-                        <th>Paris - Cote</th>
+                        <th>Paris</th>
+                        <th>Cote</th>
                         <th>Résultat</th>
                     </tr>
                     </thead>
                     <tbody>
                         {% for offer in offers %}
                             <tr>
-                                <td>{{ offer.id }}</td>
                                 <td>{{ offer.label }}</td>
-                                <td>{{ offer.fDJNumber }}</td>
+                                <td>{{ offer.fdjNumber }}</td>
                                 <td>{{ offer.sportId }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ offer.bet }}</td>
+                                <td>{{ offer.cote }}</td>
+                                <td><span class="col-xs-1 col-xs-offset-4"> {{ offer.resultat }}</span>
+                                    {% if(offer.resultat == offer.bet and offer.resultat != null) %}
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    {% elseif(offer.resultat != offer.bet and offer.resultat != null and offer.bet != null) %}
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
