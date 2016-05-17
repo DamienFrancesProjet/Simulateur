@@ -358,140 +358,135 @@ class BetController extends Controller
         $strategies = $strategyRepository->findBy(array('label' => '2LastVictoryHigherRankHomeLastDefeatAway'));
 
         $bets = $betRepository->findBy(array('strategy' => $strategies[0]));
-        $maxOutcome = $bets[sizeof($bets)-1]->getOutcome();
+        if (!empty($bets)) {
+            $maxOutcome = $bets[sizeof($bets) - 1]->getOutcome();
 
-        $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
+            $offerIds = $outcomeRepository->findAllOfferDistinctHtId($maxOutcome->getId());
 
-        foreach ($offerIds as $offerId) {
-            $offer = $offerRepository->find($offerId[1]);
-            $date = $offer->getDate();
-            $labelSplit = explode('-', $offer->getLabel());
-            $competitionId = $offer->getCompetitionId();
-            $homeTeamLabel = $labelSplit[0];
-            $awayTeamLabel = $labelSplit[1];
+            foreach ($offerIds as $offerId) {
+                $offer = $offerRepository->find($offerId[1]);
+                $date = $offer->getDate();
+                $labelSplit = explode('-', $offer->getLabel());
+                $competitionId = $offer->getCompetitionId();
+                $homeTeamLabel = $labelSplit[0];
+                $awayTeamLabel = $labelSplit[1];
 
-            if(substr($homeTeamLabel, -1)== ' ')
-            {
-                $homeTeamLabel = substr($homeTeamLabel, 0, -1);
-            }
-            if(substr($awayTeamLabel, -1)== ' ')
-            {
-                $awayTeamLabel = substr($awayTeamLabel, 0, -1);
-            }
-
-            $homeTeam = $teamRepository->findBy(array('label' => $homeTeamLabel, 'competitionId' => $competitionId));
-            $awayTeam = $teamRepository->findBy(array('label' => $awayTeamLabel, 'competitionId' => $competitionId));
-            if(!empty($homeTeam) && !empty($awayTeam)) {
-                $teams = [$homeTeam, $awayTeam];
-
-                $nbHomeMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($homeTeam[0]->getLabel(), $homeTeam[0]->getCompetitionId(), $date);
-                $nbAwayMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($awayTeam[0]->getLabel(), $awayTeam[0]->getCompetitionId(), $date);
-                if(count($nbHomeMarketResult) > count($nbAwayMarketResult))
-                {
-                    $nbMarketResult = count($nbAwayMarketResult);
+                if (substr($homeTeamLabel, -1) == ' ') {
+                    $homeTeamLabel = substr($homeTeamLabel, 0, -1);
                 }
-                else
-                {
-                    $nbMarketResult = count($nbHomeMarketResult);
+                if (substr($awayTeamLabel, -1) == ' ') {
+                    $awayTeamLabel = substr($awayTeamLabel, 0, -1);
                 }
 
-                $cptPersist = 0;
+                $homeTeam = $teamRepository->findBy(array('label' => $homeTeamLabel, 'competitionId' => $competitionId));
+                $awayTeam = $teamRepository->findBy(array('label' => $awayTeamLabel, 'competitionId' => $competitionId));
+                if (!empty($homeTeam) && !empty($awayTeam)) {
+                    $teams = [$homeTeam, $awayTeam];
 
-                foreach ($teams as $teamItem) {
-                    $team = $teamItem[0];
-                    $team->setPoints(0);
-                    $team->setSerie('');
-                    $teamLabel = $team->getLabel();
-                    $marketResultsNoCut = $marketResultRepository->findByLabelAndCompetitionIdAndDate($teamLabel, $team->getCompetitionId(), $date);
-                    $marketResults = array_slice($marketResultsNoCut, 0, $nbMarketResult);
-                    foreach ($marketResults as $marketResult) {
-                        $result = $marketResult->getResult();
-                        $resultLabel = $result->getLabel();
-                        $resultLabelSplit = explode('-', $resultLabel);
-                        $resultat = $marketResult->getResultat();
-                        if(substr($resultLabelSplit[0], -1)== ' ')
-                        {
-                            $resultLabelSplit[0] = substr($resultLabelSplit[0], 0, -1);
-                        }
-                        if ($resultLabelSplit[0] == $teamLabel) {
-                            switch ($resultat) {
-                                case '1':
-                                    $team->setPoints($team->getPoints() + 3);
-                                    $team->setSerie( $team->getSerie().'V');
-                                    break;
-                                case 'N':
-                                    $team->setPoints($team->getPoints() + 1);
-                                    $team->setSerie($team->getSerie().'N');
-                                    break;
-                                case '2':
-                                    $team->setSerie($team->getSerie().'D');
-                                    break;
+                    $nbHomeMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($homeTeam[0]->getLabel(), $homeTeam[0]->getCompetitionId(), $date);
+                    $nbAwayMarketResult = $marketResultRepository->findByLabelAndCompetitionIdAndDate($awayTeam[0]->getLabel(), $awayTeam[0]->getCompetitionId(), $date);
+                    if (count($nbHomeMarketResult) > count($nbAwayMarketResult)) {
+                        $nbMarketResult = count($nbAwayMarketResult);
+                    } else {
+                        $nbMarketResult = count($nbHomeMarketResult);
+                    }
+
+                    $cptPersist = 0;
+
+                    foreach ($teams as $teamItem) {
+                        $team = $teamItem[0];
+                        $team->setPoints(0);
+                        $team->setSerie('');
+                        $teamLabel = $team->getLabel();
+                        $marketResultsNoCut = $marketResultRepository->findByLabelAndCompetitionIdAndDate($teamLabel, $team->getCompetitionId(), $date);
+                        $marketResults = array_slice($marketResultsNoCut, 0, $nbMarketResult);
+                        foreach ($marketResults as $marketResult) {
+                            $result = $marketResult->getResult();
+                            $resultLabel = $result->getLabel();
+                            $resultLabelSplit = explode('-', $resultLabel);
+                            $resultat = $marketResult->getResultat();
+                            if (substr($resultLabelSplit[0], -1) == ' ') {
+                                $resultLabelSplit[0] = substr($resultLabelSplit[0], 0, -1);
                             }
-                        } else {
-                            switch ($resultat) {
-                                case '1':
-                                    $team->setSerie($team->getSerie().'D');
-                                    break;
-                                case 'N':
-                                    $team->setPoints($team->getPoints() + 1);
-                                    $team->setSerie($team->getSerie().'N');
-                                    break;
-                                case '2':
-                                    $team->setPoints($team->getPoints() + 3);
-                                    $team->setSerie($team->getSerie().'V');
-                                    break;
+                            if ($resultLabelSplit[0] == $teamLabel) {
+                                switch ($resultat) {
+                                    case '1':
+                                        $team->setPoints($team->getPoints() + 3);
+                                        $team->setSerie($team->getSerie() . 'V');
+                                        break;
+                                    case 'N':
+                                        $team->setPoints($team->getPoints() + 1);
+                                        $team->setSerie($team->getSerie() . 'N');
+                                        break;
+                                    case '2':
+                                        $team->setSerie($team->getSerie() . 'D');
+                                        break;
+                                }
+                            } else {
+                                switch ($resultat) {
+                                    case '1':
+                                        $team->setSerie($team->getSerie() . 'D');
+                                        break;
+                                    case 'N':
+                                        $team->setPoints($team->getPoints() + 1);
+                                        $team->setSerie($team->getSerie() . 'N');
+                                        break;
+                                    case '2':
+                                        $team->setPoints($team->getPoints() + 3);
+                                        $team->setSerie($team->getSerie() . 'V');
+                                        break;
+                                }
                             }
                         }
-                    }
-                    $em->persist($team);
-                    $cptPersist++;
+                        $em->persist($team);
+                        $cptPersist++;
 
-                    if ($cptPersist == 1000) {
-                        $em->flush();
-                        $cptPersist = 0;
-                    }
-                }
-
-                if ($cptPersist > 0) {
-                    $em->flush();
-                }
-            }
-            $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
-
-            $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
-            if (empty($resultQuery)) {
-
-
-                $resultQueryHomeTeam = $teamRepository->findBy(array('label' => $labelSplit[0], 'competitionId' => $competitionId));
-                $resultQueryAwayTeam = $teamRepository->findBy(array('label' => $labelSplit[1], 'competitionId' => $competitionId));
-                if (!empty($resultQueryHomeTeam) && !empty($resultQueryAwayTeam)) {
-                    $homeTeam = $resultQueryHomeTeam[0];
-                    $awayTeam = $resultQueryAwayTeam[0];
-                    $homeSerie = $homeTeam->getSerie();
-                    $awaySerie = $awayTeam->getSerie();
-                    if (strlen($awaySerie) > 0 && strlen($homeSerie) > 1) {
-                        if ($homeSerie[0] == 'V' && $homeSerie[1] == 'V' && $awaySerie[0] == 'D' && ($homeTeam->getPoints() > $awayTeam->getPoints())) {
-                            $bet = new Bet();
-                            $bet->setStrategy($strategies[0]);
-                            $bet->setOutcome($outcomes[0]);
-                            $em->persist($bet);
+                        if ($cptPersist == 1000) {
                             $em->flush();
+                            $cptPersist = 0;
+                        }
+                    }
+
+                    if ($cptPersist > 0) {
+                        $em->flush();
+                    }
+                }
+                $outcomes = $outcomeRepository->findBy(array('offer' => $offer));
+
+                $resultQuery = $betRepository->findBy(array('outcome' => $outcomes[0], 'strategy' => $strategies[0]));
+                if (empty($resultQuery)) {
 
 
+                    $resultQueryHomeTeam = $teamRepository->findBy(array('label' => $labelSplit[0], 'competitionId' => $competitionId));
+                    $resultQueryAwayTeam = $teamRepository->findBy(array('label' => $labelSplit[1], 'competitionId' => $competitionId));
+                    if (!empty($resultQueryHomeTeam) && !empty($resultQueryAwayTeam)) {
+                        $homeTeam = $resultQueryHomeTeam[0];
+                        $awayTeam = $resultQueryAwayTeam[0];
+                        $homeSerie = $homeTeam->getSerie();
+                        $awaySerie = $awayTeam->getSerie();
+                        if (strlen($awaySerie) > 0 && strlen($homeSerie) > 1) {
+                            if ($homeSerie[0] == 'V' && $homeSerie[1] == 'V' && $awaySerie[0] == 'D' && ($homeTeam->getPoints() > $awayTeam->getPoints())) {
+                                $bet = new Bet();
+                                $bet->setStrategy($strategies[0]);
+                                $bet->setOutcome($outcomes[0]);
+                                $em->persist($bet);
+                                $em->flush();
+
+
+                            }
                         }
                     }
                 }
             }
+
+            $strategies[0]->setWaiting(true);
+            $em->persist($strategies[0]);
+            $em->flush();
         }
-
-        $strategies[0]->setWaiting(true);
-        $em->persist($strategies[0]);
-        $em->flush();
-
-        $strategies = $strategyRepository->findAll();
+            $strategies = $strategyRepository->findAll();
 
 
-        return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
+            return $this->render('FDBetBundle:Bet:index.html.twig', array("strategies" => $strategies));
 
     }
 
