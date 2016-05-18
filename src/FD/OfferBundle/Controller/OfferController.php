@@ -51,70 +51,78 @@ class OfferController extends Controller
         foreach($eventIds as $eventIdArray)
         {
             $eventId = $eventIdArray['eventId'];
-            $offer = array();
-            $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
-            $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
-            $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
 
 
-            $bet = $betRepository->findBetAndOutcomeByEventId($eventId);
-            if(!empty($bet))
+
+            $bets = $betRepository->findBetAndOutcomeByEventId($eventId);
+            if(!empty($bets))
             {
-                $outcome = $outcomeRepository->find($bet[0][1]);
-                $offerId = $outcomeRepository->findOfferIdByOutcomeId($bet[0][1]);
-                $outcomes = $outcomeRepository->findBy(array('offer' => $offerRepository->find($offerId[0][1])));
-                if(sizeof($outcomes) == 3)
-                {
-                    if($outcomes[0] == $outcome)
-                    {
-                        $offer['bet'] = '1';
-                        $offer['cote'] = $outcome->getCote();
-                    }
-                    elseif($outcomes[1] == $outcome)
-                    {
-                        $offer['bet'] = 'N';
-                        $offer['cote'] = $outcome->getCote();
+                foreach($bets as $bet) {
+                    $offer = array();
+                    $offer['strategy'] = $bet[2];
+                    $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
+                    $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
+                    $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
+                    $outcome = $outcomeRepository->find($bet[1]);
+                    $offerId = $outcomeRepository->findOfferIdByOutcomeId($bet[1]);
+                    $outcomes = $outcomeRepository->findBy(array('offer' => $offerRepository->find($offerId[0][1])));
+                    if (sizeof($outcomes) == 3) {
+                        if ($outcomes[0] == $outcome) {
+                            $offer['bet'] = '1';
+                            $offer['cote'] = $outcome->getCote();
+                        } elseif ($outcomes[1] == $outcome) {
+                            $offer['bet'] = 'N';
+                            $offer['cote'] = $outcome->getCote();
 
+                        } else {
+                            $offer['bet'] = '2';
+                            $offer['cote'] = $outcome->getCote();
+
+                        }
+                    } else {
+                        if ($outcomes[0] == $outcome) {
+                            $offer['bet'] = '1';
+                            $offer['cote'] = $outcome->getCote();
+
+                        } else {
+                            $offer['bet'] = '2';
+                            $offer['cote'] = $outcome->getCote();
+                        }
+                    }
+                    $resultat = $marketResultRepository->findResultatByEventId($eventId);
+                    if(!empty($resultat))
+                    {
+                        $offer['resultat'] = $resultat[0]['resultat'];
                     }
                     else
                     {
-                        $offer['bet'] = '2';
-                        $offer['cote'] = $outcome->getCote();
-
+                        $offer['resultat'] = null;
                     }
+                    array_push($offers, $offer);
+
+                }
+            }
+            else
+            {
+                $offer = array();
+                $offer['strategy'] = null;
+                $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
+                $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
+                $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
+                $offer['bet'] = null;
+                $offer['cote'] = null;
+
+                $resultat = $marketResultRepository->findResultatByEventId($eventId);
+                if(!empty($resultat))
+                {
+                    $offer['resultat'] = $resultat[0]['resultat'];
                 }
                 else
                 {
-                    if($outcomes[0] == $outcome)
-                    {
-                        $offer['bet'] = '1';
-                        $offer['cote'] = $outcome->getCote();
-
-                    }
-                    else
-                    {
-                        $offer['bet'] = '2';
-                        $offer['cote'] = $outcome->getCote();
-                    }
+                    $offer['resultat'] = null;
                 }
+                array_push($offers, $offer);
             }
-            else
-            {
-                $offer['bet'] = null;
-                $offer['cote'] = null;
-            }
-
-            $resultat = $marketResultRepository->findResultatByEventId($eventId);
-            if(!empty($resultat))
-            {
-                $offer['resultat'] = $resultat[0]['resultat'];
-            }
-            else
-            {
-                $offer['resultat'] = null;
-            }
-
-            array_push($offers, $offer);
 
 
         }
@@ -219,70 +227,78 @@ class OfferController extends Controller
         foreach($eventIds as $eventIdArray)
         {
             $eventId = $eventIdArray['eventId'];
-            $offer = array();
-            $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
-            $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
-            $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
 
 
-            $bet = $betRepository->findBetAndOutcomeByEventId($eventId);
-            if(!empty($bet))
+
+            $bets = $betRepository->findBetAndOutcomeByEventId($eventId);
+            if(!empty($bets))
             {
-                $outcome = $outcomeRepository->find($bet[0][1]);
-                $offerId = $outcomeRepository->findOfferIdByOutcomeId($bet[0][1]);
-                $outcomes = $outcomeRepository->findBy(array('offer' => $offerRepository->find($offerId[0][1])));
-                if(sizeof($outcomes) == 3)
-                {
-                    if($outcomes[0] == $outcome)
-                    {
-                        $offer['bet'] = '1';
-                        $offer['cote'] = $outcome->getCote();
-                    }
-                    elseif($outcomes[1] == $outcome)
-                    {
-                        $offer['bet'] = 'N';
-                        $offer['cote'] = $outcome->getCote();
+                foreach($bets as $bet) {
+                    $offer = array();
+                    $offer['strategy'] = $bet[2];
+                    $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
+                    $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
+                    $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
+                    $outcome = $outcomeRepository->find($bet[1]);
+                    $offerId = $outcomeRepository->findOfferIdByOutcomeId($bet[1]);
+                    $outcomes = $outcomeRepository->findBy(array('offer' => $offerRepository->find($offerId[0][1])));
+                    if (sizeof($outcomes) == 3) {
+                        if ($outcomes[0] == $outcome) {
+                            $offer['bet'] = '1';
+                            $offer['cote'] = $outcome->getCote();
+                        } elseif ($outcomes[1] == $outcome) {
+                            $offer['bet'] = 'N';
+                            $offer['cote'] = $outcome->getCote();
 
+                        } else {
+                            $offer['bet'] = '2';
+                            $offer['cote'] = $outcome->getCote();
+
+                        }
+                    } else {
+                        if ($outcomes[0] == $outcome) {
+                            $offer['bet'] = '1';
+                            $offer['cote'] = $outcome->getCote();
+
+                        } else {
+                            $offer['bet'] = '2';
+                            $offer['cote'] = $outcome->getCote();
+                        }
+                    }
+                    $resultat = $marketResultRepository->findResultatByEventId($eventId);
+                    if(!empty($resultat))
+                    {
+                        $offer['resultat'] = $resultat[0]['resultat'];
                     }
                     else
                     {
-                        $offer['bet'] = '2';
-                        $offer['cote'] = $outcome->getCote();
-
+                        $offer['resultat'] = null;
                     }
+                    array_push($offers, $offer);
+
+                }
+            }
+            else
+            {
+                $offer = array();
+                $offer['strategy'] = null;
+                $offer['label'] = $offerRepository->findLabelByEventId($eventId)[0]['label'];
+                $offer['fdjNumber'] = $offerRepository->findFdjNumberByEventId($eventId)[0]['fDJNumber'];
+                $offer['sportId'] = $offerRepository->findSportIdByEventId($eventId)[0]['sportId'];
+                $offer['bet'] = null;
+                $offer['cote'] = null;
+
+                $resultat = $marketResultRepository->findResultatByEventId($eventId);
+                if(!empty($resultat))
+                {
+                    $offer['resultat'] = $resultat[0]['resultat'];
                 }
                 else
                 {
-                    if($outcomes[0] == $outcome)
-                    {
-                        $offer['bet'] = '1';
-                        $offer['cote'] = $outcome->getCote();
-
-                    }
-                    else
-                    {
-                        $offer['bet'] = '2';
-                        $offer['cote'] = $outcome->getCote();
-                    }
+                    $offer['resultat'] = null;
                 }
+                array_push($offers, $offer);
             }
-            else
-            {
-                $offer['bet'] = null;
-                $offer['cote'] = null;
-            }
-
-            $resultat = $marketResultRepository->findResultatByEventId($eventId);
-            if(!empty($resultat))
-            {
-                $offer['resultat'] = $resultat[0]['resultat'];
-            }
-            else
-            {
-                $offer['resultat'] = null;
-            }
-
-            array_push($offers, $offer);
 
 
         }

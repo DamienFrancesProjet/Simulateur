@@ -12,7 +12,7 @@ class BetRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findBetAndOutcomeByEventId($eventId)
     {
-        $query = $this->_em->createQuery('SELECT DISTINCT  IDENTITY(b.outcome) FROM FDBetBundle:Bet b JOIN b.outcome ou JOIN ou.offer o WHERE o.eventId = :eventId');
+        $query = $this->_em->createQuery('SELECT DISTINCT IDENTITY(b.outcome), IDENTITY(b.strategy) FROM FDBetBundle:Bet b JOIN b.outcome ou JOIN ou.offer o WHERE o.eventId = :eventId');
         $query->setParameter('eventId', $eventId);
         return $query->getResult();
     }
